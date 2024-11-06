@@ -1,0 +1,46 @@
+openapi: 3.0.0
+info:
+  title: Member API
+  version: 1.0.0
+  description: API documentation for the Member application
+servers:
+  - url: http://localhost:5000
+paths:
+  /api/register:
+    post:
+      summary: Register a new member
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                id:
+                  type: string
+                pwd:
+                  type: string
+                pwd_confirm:
+                  type: string
+      responses:
+        '200':
+          description: Successful registration
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    example: ok
+                  user:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      id:
+                        type: string
+        '500':
+          description: Database error
