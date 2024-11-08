@@ -1,24 +1,20 @@
-import express from "express";
-// jwt 라이브러리
-import jwt from "jsonwebtoken";
-// env환경변수 라이브러리
-import dotenv from "dotenv";
-// 토큰검증 미들웨어
-import { auth } from "./authMiddleware";
+const express = require("express");
+const jwt = require("jsonwebtoken"); // jwt 라이브러리
+const dotenv = require("dotenv"); // env환경변수 라이브러리
+
 
 const app = express();
-// 환경변수 사용선언
-dotenv.config();
+dotenv.config(); // 환경변수 사용선언
 app.use(express.json());
 const port = 5432;
 
-//  POST login요청이 들어오면 body에 id와 password를 실어서 요청으로 가정해서 jwt를발급해준다.
+// POST login 요청이 들어오면 body에 id와 password를 실어서 요청으로 가정해서 jwt를 발급해준다.
 app.post("/login", (req, res, next) => {
   const key = process.env.SECRET_KEY;
-  // 받은 요청에서 db의 데이터를 가져온다 (로그인정보)
   const nickname = "JY";
   const profile = "images";
   let token = "";
+
   // jwt.sign(payload, secretOrPrivateKey, [options, callback])
   token = jwt.sign(
     {
@@ -32,6 +28,7 @@ app.post("/login", (req, res, next) => {
       issuer: "토큰발급자",
     }
   );
+
   // response
   return res.status(200).json({
     code: 200,
@@ -39,3 +36,5 @@ app.post("/login", (req, res, next) => {
     token: token,
   });
 });
+
+module.exports = app;

@@ -1,6 +1,6 @@
 const { Sequelize } = require('sequelize');
 
-const sequelize = new Sequelize('CP', 'postgres', '0879', { // 데이터베이스 이름, 사용자 이름, 비밀번호
+const sequelize = new Sequelize('CP', 'postgres', '9668', { // 데이터베이스 이름, 사용자 이름, 비밀번호
     host: 'localhost',
     dialect: 'postgres',
     port: 5432, 

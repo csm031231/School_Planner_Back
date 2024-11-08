@@ -44,6 +44,17 @@ class UserService {
         return { user, token };
     }
 
+        // 비밀번호 업데이트 함수
+    async updatePassword(userId, newPassword) {
+            // UserRepository를 통해 비밀번호 업데이트 수행
+        await UserRepository.updatePassword(userId, newPassword);
+    }
+
+    // 회원 탈퇴
+    async deleteUser(userId) {
+        await UserRepository.deleteUser(userId);
+    }
+    
 }
 
 module.exports = new UserService();

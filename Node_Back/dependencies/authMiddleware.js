@@ -1,25 +1,31 @@
-import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
 
 dotenv.config();
 
-export const auth = (req, res, next) => {
+const auth = (req, res, next) => {
   const key = process.env.SECRET_KEY;
-  // 인증 완료
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({
+      code: 401,
+      message: "토큰이 제공되지 않았습니다.",
+    });
+  }
+
+  const token = authHeader.split(" ")[1]; // "Bearer"와 토큰을 분리하여 토큰만 추출
+
   try {
-    // 요청 헤더에 저장된 토큰(req.headers.authorization)과 비밀키를 사용하여 토큰을 req.decoded에 반환
-    req.decoded = jwt.verify(req.headers.authorization, key);
+    req.decoded = jwt.verify(token, key); // 추출한 토큰을 검증
     return next();
   } catch (error) {
-    // 인증 실패
-    // 유효시간이 초과된 경우
     if (error.name === "TokenExpiredError") {
       return res.status(419).json({
         code: 419,
         message: "토큰이 만료되었습니다.",
       });
     }
-    // 토큰의 비밀키가 일치하지 않는 경우
     if (error.name === "JsonWebTokenError") {
       return res.status(401).json({
         code: 401,
@@ -28,3 +34,4 @@ export const auth = (req, res, next) => {
     }
   }
 };
+module.exports = { auth };

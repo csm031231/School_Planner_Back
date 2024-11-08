@@ -1,7 +1,7 @@
 const express = require('express');
 const UserService = require('../../domains/users/services'); // UserService 가져오기
 const MemberDTO = require('../../domains/users/dto'); // DTO 클래스 가져오기
-
+const { auth } = require("../../dependencies/authMiddleware.js");
 const router = express.Router();
 
 // 아이디 중복 체크
@@ -55,6 +55,39 @@ router.post('/login', async (req, res) => {
     } catch (error) {
         console.error('Error logging in:', error);
         return res.status(400).json({ result: "error", message: error.message });
+    }
+});
+
+// 비밀번호 변경 요청을 받아 처리
+router.post('/update-password', auth, async (req, res) => {
+    const { pwd, pwd_confirm } = req.body;
+    const userId = req.decoded.id; // 토큰에서 user ID 추출
+
+    // 비밀번호와 비밀번호 확인이 일치하는지 확인
+    if (pwd !== pwd_confirm) {
+        return res.status(400).json({ result: "error", message: "비밀번호가 일치하지 않습니다." });
+    }
+
+    try {
+        // 비밀번호 업데이트 수행
+        await UserService.updatePassword(userId, pwd);
+        return res.status(200).json({ result: "ok", message: "비밀번호가 성공적으로 변경되었습니다." });
+    } catch (error) {
+        console.error('Error updating password:', error);
+        return res.status(500).json({ result: "error", message: "Database error" });
+    }
+});
+
+// 회원 탈퇴
+router.post('/delete-account', auth, async (req, res) => { // DELETE 대신 POST 사용
+    const userId = req.decoded.id; // 토큰에서 user ID 추출
+
+    try {
+        await UserService.deleteUser(userId);
+        return res.status(200).json({ result: "ok", message: "회원 탈퇴가 완료되었습니다." });
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        return res.status(500).json({ result: "error", message: "회원 탈퇴 중 오류가 발생했습니다." });
     }
 });
 
