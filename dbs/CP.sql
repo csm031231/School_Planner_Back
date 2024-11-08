@@ -26,10 +26,10 @@ SET default_table_access_method = heap;
 --
 
 CREATE TABLE public.member (
-    id character(30) NOT NULL,
-    pwd character(30) NOT NULL,
-    name character(30) NOT NULL,
-    pwd_confirm character(30) NOT NULL,
+    id text NOT NULL,
+    pwd text NOT NULL,
+    name text NOT NULL,
+    pwd_confirm text NOT NULL,
     "createdAt" timestamp without time zone DEFAULT now(),
     "updatedAt" timestamp without time zone DEFAULT now()
 );
@@ -54,8 +54,7 @@ ALTER TABLE public.planner OWNER TO postgres;
 --
 
 COPY public.member (id, pwd, name, pwd_confirm, "createdAt", "updatedAt") FROM stdin;
-1234                          	4321                          	jun                           	4321                          	2024-11-06 20:19:08.750686	2024-11-06 20:19:08.750686
-5678                          	8765                          	aa                            	8765                          	2024-11-06 11:20:11.213	2024-11-06 11:20:11.213
+test1	test	test	test	2024-11-07 15:41:10.748	2024-11-07 15:41:10.748
 \.
 
 
