@@ -1,4 +1,5 @@
 require('dotenv').config();
+
 console.log("Loaded SECRET_KEY:", process.env.SECRET_KEY); // 환경 변수 확인용 로그
 
 const express = require('express');

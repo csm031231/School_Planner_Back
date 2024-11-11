@@ -233,6 +233,167 @@ paths:
                     type: string
                     example: "회원 탈퇴 중 오류가 발생했습니다."
 
+  /api/planner:
+    post:
+      summary: Save planner content and date
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  description: Planner content to save
+                date:
+                  type: string
+                  format: date
+                  description: Date the content was written
+      responses:
+        '201':
+          description: Planner content saved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    example: "ok"
+                  message:
+                    type: string
+                    example: "Planner 내용이 성공적으로 저장되었습니다."
+                  data:
+                    type: object
+                    properties:
+                      user_id:
+                        type: string
+                        example: "user123"
+                        description: The ID of the user who saved the content
+                      content:
+                        type: string
+                        example: "Meeting with the team"
+                        description: Planner content that was saved
+                      date:
+                        type: string
+                        format: date
+                        example: "2024-11-11"
+                        description: Date the content was written
+        '401':
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    example: "error"
+                  message:
+                    type: string
+                    example: "토큰이 제공되지 않았습니다."
+        '500':
+          description: Error saving planner content
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    example: "error"
+                  message:
+                    type: string
+                    example: "Planner 저장 중 오류가 발생했습니다."
+    # put:
+    #   summary: Update planner content and date for the user
+    #   security:
+    #     - bearerAuth: []
+    #   requestBody:
+    #     required: true
+    #     content:
+    #       application/json:
+    #         schema:
+    #           type: object
+    #           properties:
+    #             content:
+    #               type: string
+    #               description: Planner content to update
+    #             date:
+    #               type: string
+    #               format: date
+    #               description: Date the content was written
+    #   responses:
+    #     '200':
+    #       description: Planner content updated successfully
+    #       content:
+    #         application/json:
+    #           schema:
+    #             type: object
+    #             properties:
+    #               result:
+    #                 type: string
+    #                 example: "ok"
+    #               message:
+    #                 type: string
+    #                 example: "Planner 내용이 성공적으로 수정되었습니다."
+    #               data:
+    #                 type: object
+    #                 properties:
+    #                   user_id:
+    #                     type: string
+    #                     example: "user123"
+    #                   content:
+    #                     type: string
+    #                     example: "Updated meeting with team"
+    #                   date:
+    #                     type: string
+    #                     format: date
+    #                     example: "2024-11-12"
+    #     '400':
+    #       description: Invalid input or planner not found
+    #       content:
+    #         application/json:
+    #           schema:
+    #             type: object
+    #             properties:
+    #               result:
+    #                 type: string
+    #                 example: "error"
+    #               message:
+    #                 type: string
+    #                 example: "잘못된 날짜 형식입니다. YYYY-MM-DD 형식으로 입력해주세요."
+    #     '404':
+    #       description: Planner entry not found for the user
+    #       content:
+    #         application/json:
+    #           schema:
+    #             type: object
+    #             properties:
+    #               result:
+    #                 type: string
+    #                 example: "error"
+    #               message:
+    #                 type: string
+    #                 example: "수정할 플래너 항목을 찾을 수 없습니다."
+    #     '500':
+    #       description: Error updating planner content
+    #       content:
+    #         application/json:
+    #           schema:
+    #             type: object
+    #             properties:
+    #               result:
+    #                 type: string
+    #                 example: "error"
+    #               message:
+    #                 type: string
+    #                 example: "Planner 수정 중 오류가 발생했습니다."
+
+
 components:
   securitySchemes:
     bearerAuth:

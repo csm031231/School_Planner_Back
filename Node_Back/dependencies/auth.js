@@ -6,7 +6,6 @@ const dotenv = require("dotenv"); // env환경변수 라이브러리
 const app = express();
 dotenv.config(); // 환경변수 사용선언
 app.use(express.json());
-const port = 5432;
 
 // POST login 요청이 들어오면 body에 id와 password를 실어서 요청으로 가정해서 jwt를 발급해준다.
 app.post("/login", (req, res, next) => {
@@ -21,6 +20,7 @@ app.post("/login", (req, res, next) => {
       type: "JWT",
       nickname: nickname,
       profile: profile,
+      user_id: "user123"
     },
     key,
     {

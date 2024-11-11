@@ -18,6 +18,7 @@ const auth = (req, res, next) => {
 
   try {
     req.decoded = jwt.verify(token, key); // 추출한 토큰을 검증
+    req.user = req.decoded; // req.decoded를 req.user로 설정
     return next();
   } catch (error) {
     if (error.name === "TokenExpiredError") {
