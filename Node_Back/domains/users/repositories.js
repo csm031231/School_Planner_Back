@@ -1,4 +1,4 @@
-const UserModel = require('./models');
+const { UserModel, PlannerModel } = require('./models');
 
 class UserRepository {
     // 사용자 생성
@@ -19,7 +19,6 @@ class UserRepository {
             throw new Error('존재하지 않는 사용자입니다.');
         }
         user.pwd = newPassword;
-        user.pwd_confirm = newPassword;
         await user.save();
     }
 
@@ -31,67 +30,47 @@ class UserRepository {
         }
         await user.destroy(); // 사용자 데이터 삭제
     }
+}
 
+class PlannerRepository {
     // 일정 생성
     async createPlannerEntry(userId, content, date) {
-        const user = await this.findUserById(userId);
-        if (!user) {
-            throw new Error('존재하지 않는 사용자입니다.');
-        }
-
-        // planner 테이블에 내용과 날짜를 저장
         const plannerEntry = await PlannerModel.create({
-            user_id: userId,
+            userId: userId,
             content: content,
             date: date
         });
         return plannerEntry;
     }
 
-    // // 일정 조회
-    // async getPlannerEntriesByUserId(userId) {
-    //     const user = await this.findUserById(userId);
-    //     if (!user) {
-    //         throw new Error('존재하지 않는 사용자입니다.');
-    //     }
+    // 플래너 ID로 플래너 찾기
+    async findPlannerById(plannerId) {
+        return await PlannerModel.findOne({ where: { plannerId } });
+    }
 
-    //     // 특정 사용자의 모든 일정 조회
-    //     const plannerEntries = await PlannerModel.findAll({
-    //         where: { user_id: userId }
-    //     });
-    //     return plannerEntries;
-    // }
+    // 플래너 내용 업데이트
+    async updatePlanner(plannerId, content, date) {
+        const planner = await this.findPlannerById(plannerId);
+        if (!planner) {
+            throw new Error('존재하지 않는 플래너 항목입니다.');
+        }
+        planner.content = content;
+        planner.date = date;
+        await planner.save();
+        return planner;
+    }
 
-    //  // 일정 수정
-    //  async updatePlannerEntry(userId, plannerId, content, date) {
-    //     // 사용자가 존재하는지 확인
-    //     const user = await this.findUserById(userId);
-    //     if (!user) {
-    //         throw new Error('존재하지 않는 사용자입니다.');
-    //     }
+    // 플래너 내용 삭제
+    async deletePlannerContent(plannerId) {
+        const planner = await this.findPlannerById(plannerId);
+        if (!planner) {
+            throw new Error('존재하지 않는 플래너 항목입니다.');
+        }
+        await planner.destroy();
+    }
+}
 
-    //     // user_id와 plannerId로 플래너 항목 찾기
-    //     const plannerEntry = await PlannerModel.findOne({
-    //         where: {
-    //             user_id: userId,
-    //             id: plannerId // 수정할 플래너 항목 찾기
-    //         }
-    //     });
-
-    //     if (!plannerEntry) {
-    //         throw new Error('수정할 플래너 항목을 찾을 수 없습니다.');
-    //     }
-
-    //     // 플래너 항목 내용과 날짜 수정
-    //     plannerEntry.content = content;
-    //     plannerEntry.date = date;
-
-    //     // 수정된 플래너 항목 저장
-    //     await plannerEntry.save();
-
-    //     return plannerEntry;  // 수정된 플래너 항목 반환
-    // }
-
-} 
-
-module.exports = new UserRepository();
+module.exports = {
+    UserRepository: new UserRepository(),
+    PlannerRepository: new PlannerRepository(),
+};

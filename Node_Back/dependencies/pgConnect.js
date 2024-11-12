@@ -1,17 +1,30 @@
 const { Sequelize } = require('sequelize');
+const dotenv = require('dotenv');
 
-const sequelize = new Sequelize('CP', 'postgres', '0879', { // 데이터베이스 이름, 사용자 이름, 비밀번호
-    host: 'localhost',
-    dialect: 'postgres',
-    port: 5432, 
-});
+dotenv.config();
 
-sequelize.authenticate()
-    .then(() => {
+const sequelize = new Sequelize(
+    process.env.DB_NAME,
+    process.env.DB_USER,
+    process.env.DB_PASSWORD,
+    {
+        host: process.env.DB_HOST,
+        dialect: process.env.DB_DIALECT || 'postgres',
+        port: process.env.DB_PORT || 5432,
+    }
+);
+
+const connectDB = async () => {
+    try {
+        await sequelize.authenticate();
         console.log('DB 연결 성공');
-    })
-    .catch(err => {
-        console.error('DB 연결 오류', err);
-    });
+    } catch (error) {
+        console.error('DB 연결 오류:', error.message);
+        // 전체 오류 로그를 출력하려면 다음을 사용합니다.
+        console.error(error);
+    }
+};
 
-module.exports = sequelize; // Sequelize 인스턴스를 내보냄
+connectDB();
+
+module.exports = sequelize;
