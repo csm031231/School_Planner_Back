@@ -1,5 +1,5 @@
 class MemberDTO {
-    constructor(id, name, pwd) {
+    constructor(name, id, pwd) {
         this.id = id;
         this.name = name;
         this.pwd = pwd;

@@ -4,6 +4,7 @@ const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const userController = require('./routers/users/user_controller'); // 사용자 라우터 가져오기
+const cors = require('cors'); // CORS 패키지 추가
 
 const app = express();
 const swaggerDocument = YAML.load('./swagger.yaml');
@@ -15,6 +16,12 @@ if (process.env.NODE_ENV !== 'production') {
 
 // Swagger UI 설정
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+// CORS 설정 추가
+app.use(cors({
+    origin: 'http://localhost:3000', // 허용할 클라이언트 주소 (React 앱 주소)
+    credentials: true
+  }));
 
 // 미들웨어 설정
 app.use(express.json()); // JSON 요청 처리

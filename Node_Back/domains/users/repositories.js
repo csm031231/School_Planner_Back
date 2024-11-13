@@ -1,5 +1,5 @@
 const { UserModel, PlannerModel } = require('./models');
-
+const { Op } = require('sequelize');
 class UserRepository {
     // 사용자 생성
     async createUser(userData) {
@@ -30,6 +30,7 @@ class UserRepository {
         }
         await user.destroy(); // 사용자 데이터 삭제
     }
+    
 }
 
 class PlannerRepository {
@@ -42,7 +43,22 @@ class PlannerRepository {
         });
         return plannerEntry;
     }
-
+    async findByUserIdAndDateRange(userId, startDate, endDate) {
+        try {
+            const tasks = await PlannerModel.findAll({
+                where: {
+                    userId: userId,
+                    date: {
+                        [Op.between]: [startDate, endDate]
+                    }
+                },
+                order: [['date', 'ASC']]
+            });
+            return tasks;
+        } catch (error) {
+            throw error;
+        }
+    }
     // 플래너 ID로 플래너 찾기
     async findPlannerById(plannerId) {
         return await PlannerModel.findOne({ where: { plannerId } });

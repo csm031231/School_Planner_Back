@@ -234,6 +234,90 @@ paths:
                     example: "회원 탈퇴 중 오류가 발생했습니다."
 
   /api/planner:
+    get:
+     summary: Get monthly planner entries
+     security:
+       - bearerAuth: []
+     parameters:
+       - in: query
+         name: year
+         required: true
+         schema:
+           type: string
+         description: Year to fetch planners for (e.g. 2024)
+       - in: query
+         name: month
+         required: true
+         schema:
+           type: string
+         description: Month to fetch planners for (01-12)
+     responses:
+       '200':
+         description: Successfully retrieved planner entries
+         content:
+           application/json:
+             schema:
+               type: object
+               properties:
+                 result:
+                   type: string
+                   example: "ok"
+                 tasks:
+                   type: array
+                   items:
+                     type: object
+                     properties:
+                       id:
+                         type: integer
+                         example: 1
+                       content:
+                         type: string
+                         example: "팀 미팅"
+                       date:
+                         type: string
+                         example: "2024-11-15"
+                       completed:
+                         type: boolean
+                         example: false
+       '400':
+         description: Invalid request parameters
+         content:
+           application/json:
+             schema:
+               type: object
+               properties:
+                 result:
+                   type: string
+                   example: "error"
+                 message:
+                   type: string
+                   example: "년도와 월을 지정해주세요."
+       '401':
+         description: Unauthorized access
+         content:
+           application/json:
+             schema:
+               type: object
+               properties:
+                 result:
+                   type: string
+                   example: "error"
+                 message:
+                   type: string
+                   example: "토큰이 제공되지 않았습니다."
+       '500':
+         description: Server error while fetching planner entries
+         content:
+           application/json:
+             schema:
+               type: object
+               properties:
+                 result:
+                   type: string
+                   example: "error"
+                 message:
+                   type: string
+                   example: "Planner 조회 중 오류가 발생했습니다."
     post:
       summary: Save planner content and date
       security:
@@ -304,6 +388,7 @@ paths:
                   message:
                     type: string
                     example: "Planner 저장 중 오류가 발생했습니다."
+   
 
   /api/planner/{plannerId}:
     put:

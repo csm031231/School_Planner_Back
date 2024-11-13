@@ -64,6 +64,19 @@ class PlannerService {
         }
     }
 
+    async getPlannersByMonth(userId, startDate, endDate) {
+        try {
+            const tasks = await PlannerRepository.findByUserIdAndDateRange(
+                userId,
+                startDate,
+                endDate
+            );
+            return tasks;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     // 플래너 수정
     async updatePlanner(plannerId, newContent, date) {
         // PlannerRepository를 통해 플래너 내용과 날짜를 업데이트 수행
